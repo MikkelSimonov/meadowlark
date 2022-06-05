@@ -2,7 +2,7 @@
 const express = require('express')
 const { engine } = require('express-handlebars')
 
-const fortune = require('./lib/fortune')
+const handlers = require('./lib/handlers')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -24,24 +24,15 @@ app.set('views', './views');
 app.use(express.static(__dirname + '/public')) // /public - папка со статическими ресурсами: CSS, JPG, JS...
 
 // главная страница - метод get
-app.get('/', (req, res) => res.render('home'))
+app.get('/', handlers.home)
 
 // страница о нас - метод get
-app.get('/about', (req, res) => {
-  res.render('about', { fortune: fortune.getFortune() })
-})
+app.get('/about', handlers.about)
 
 // пользовательская страница 404
-app.use((req, res) => {
-  res.status(404)
-  res.render('404')
-})
+app.use(handlers.notFound)
 
 // пользовательская страница 500
-app.use((err, req, res, next) => {
-  console.log(err.message)
-  res.status(500)
-  res.render('500')
-})
+app.use(handlers.serverError)
 
 app.listen(port, () => console.log(`Express запущен на http://localhost:${port}; Нажмите Ctrl + C для завершения.`))
