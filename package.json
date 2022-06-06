@@ -4,7 +4,8 @@
   "description": "travel website",
   "main": "meadowlark.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint meadowlark.js lib"
   },
   "author": "Mikkel",
   "license": "ISC",
@@ -13,6 +14,7 @@
     "express-handlebars": "^6.0.6"
   },
   "devDependencies": {
+    "eslint": "^8.17.0",
     "jest": "^28.1.0",
     "portfinder": "^1.0.28",
     "puppeteer": "^14.2.1"

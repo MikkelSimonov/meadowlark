@@ -49,3 +49,13 @@ Mock-объекты:
 
 npm install --save-dev puppeteer
 npm install --save-dev portfinder
+
+/**********/
+
+Установка ESLint:
+
+npm install --save-dev eslint
+
+Запуск утилиты для формирования файла конфигурации:
+
+./node_modules/.bin/eslint --init
