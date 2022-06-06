@@ -35,4 +35,11 @@ app.use(handlers.notFound)
 // пользовательская страница 500
 app.use(handlers.serverError)
 
-app.listen(port, () => console.log(`Express запущен на http://localhost:${port}; Нажмите Ctrl + C для завершения.`))
+// делаем возможность испортировать приложение как модуль
+if (require.main === module) { // при запуске файла с помощью node напрямую require.main будет соответствовать глобальному модулю
+  app.listen(port, () => {
+    console.log(`Express запущен на http://localhost:${port}; Нажмите Ctrl + C для завершения.`)
+  })
+} else {
+  module.exports = app
+}
