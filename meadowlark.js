@@ -12,6 +12,8 @@ app.engine('handlebars', engine({
   defaultLayout: 'main', // указываем макет по умолчанию /views/layouts/main.handlebars
 }))
 
+app.disable('x-powered-by')
+
 app.set('view engine', 'handlebars')
 app.set('views', './views');
 
