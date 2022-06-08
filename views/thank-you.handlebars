@@ -1,0 +1,82 @@
+<h2>Tell Us About Yourself</h2>
+<form action="/process-contact" method="POST">
+  <div>
+    <label>Your name:
+      <input type="text" name="name" />
+    </label>
+  </div>
+  <br />
+  <div>
+    <label>Your email:
+      <input type="email" name="email" />
+    </label>
+  </div>
+  <br />
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
+<br>
+<hr></hr>
+<br>
+<form action="/process-contact-2" method="POST">
+  <div>
+    <label>Your name:
+      <input type="text" name="name" />
+    </label>
+  </div>
+  <br />
+  <div>
+    <label>Your email:
+      <input type="email" name="email" />
+    </label>
+  </div>
+  <br />
+  <div>
+    <label>Simulator error:
+      <input type="checkbox" name="simulateError" />
+    </label>
+  </div>
+  <br />
+  <div>
+    <label>Use Ajax?:
+      <input type="checkbox" name="useAjax" />
+    </label>
+  </div>
+  <br />
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
+<script>
+const api = {
+  post(path, data) {
+    const body = typeof data === 'object' ? JSON.stringify(data) : data
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+    return fetch(path, { method: 'POST', body, headers })
+    .then(res => {
+      if (res.status < 200 || res.status >= 400)
+        return Promise.reject(new Error(`API error: ${res.status}`))
+      return res.json()
+    })
+  }
+}
+
+document.querySelector('form[action="/process-contact-2"]').addEventListener('submit', evt => {
+  const formdata = new FormData(evt.target)
+  if (!formdata.get('useAjax')) return
+  evt.preventDefault()
+  const data = {
+    name: formdata.get('name'),
+    email: formdata.get('email'),
+    simulateError: formdata.get('simulateError')
+  }
+
+  api.post('/process-contact-2', data)
+    //.then(() => window.location = '/thank-you')
+    //.catch(() => window.location = '/contact-error')
+})
+</script>

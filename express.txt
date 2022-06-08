@@ -25,7 +25,7 @@ res.send(body) - отправляет ответ клиенту.
 res.json(json) - отправляет JSON клиенту.
 res.jsonp(json) - отправляет JSONP клиенту.
 res.end() - завершает соединение без отправки ответа.
-res.type(type) - устанавливает заголовок Content-Type. 
+res.type(type) - устанавливает заголовок Content-Type.
 res.format(object) - позволяет отправлять различное содержимое в зависимости от заголовка Accept запроса.
 res.attachment([filename], res.download(path, [filename], [callback])) - оба метода устанавливают заголовок ответа Content-Disposition в значение attachment. Это указывает браузеру что необходимо загружать содержимое вместо его отображения.
 res.sendFine(path, [options], [callback]) - этот метод читает файл, заданный параметром path, и отправляет еего содержимое клиенту.
