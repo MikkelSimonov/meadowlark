@@ -2,14 +2,22 @@
 const express = require('express')
 const { engine } = require('express-handlebars')
 const handlers = require('./lib/handlers')
-const bodyParser = require('body-parser') // промежуточное ПО для парсинга тела запроса
+const weatherMiddleware = require('./lib/middleware/weather')
+const bodyParser = require('body-parser')
 
 const app = express()
 const port = process.env.PORT || 3000
 
 // настройка механизма представлений handlebars
 app.engine('handlebars', engine({
-  defaultLayout: 'main', // указываем макет по умолчанию /views/layouts/main.handlebars
+  defaultLayout: 'main', // указываем макет по умолчанию /views/layouts/main.handlebars,
+  helpers: {
+    section: function (name, options) {
+      if (!this._sections) this._sections = {}
+      this._sections[name] = options.fn(this)
+      return null
+    },
+  },
 }))
 
 app.disable('x-powered-by')
@@ -28,6 +36,12 @@ app.use(bodyParser.json())
 
 // обработчик роутера для статических ресурсов
 app.use(express.static(__dirname + '/public')) // /public - папка со статическими ресурсами: CSS, JPG, JS...
+
+/***** ЧАСТИЧНЫЕ ШАБЛОНЫ А ТАК ЖЕ MIDDLEWARE *****/
+
+app.use(weatherMiddleware)
+
+/**********/
 
 // главная страница - метод get
 app.get('/', handlers.home)
@@ -141,6 +155,39 @@ app.delete('/api/tour/:id', (req, res) => {
   tours.splice(idx, 1)
   res.json({ success: true })
 })
+
+/***** ВОЗМОЖНОСТИ ШАБЛОНИЗАТОРА *****/
+
+let Obj = {
+  currency: {
+    name: 'Доллары США',
+    abbrev: 'USD',
+  },
+  tours: [
+    { name: 'Худ-ривер', price: '$99.95'},
+    { name: 'Орегон Коуст', price: '$159.95'},
+  ],
+  specialsUrl: '/january-specials',
+  currencies: [ 'USD', 'GBP', 'BTC' ],
+}
+
+app.get('/tours/tours-list', (req, res) => {
+  res.render('tours-list', Obj)
+})
+
+// тестирование секций
+app.get('/section-test', (req, res) => res.render('section-test'))
+
+/**********/
+
+app.get('/newsletter-signup', handlers.newsletterSignup)
+app.post('/newsletter-signup/process', handlers.newsletterSignupProcess)
+app.get('/newsletter-signup/thank-you', handlers.newsletterSignupThankYou)
+
+app.get('/newsletter', handlers.newsletter)
+app.post('/api/newsletter-signup-ajax', handlers.api.newsletterSignup)
+
+/**********/
 
 // пользовательская страница 404
 app.use(handlers.notFound)
